@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: 17bd904ade0f5f14bb54f6139b7cf47b
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - hydrogen: {fileID: 100002, guid: 84ed3dff2bcfa05469b1c43c32eb821a, type: 2}
+  - oxygen: {fileID: 100002, guid: eb96a189c7b86b24c8ae5dbaeb577947, type: 2}
+  - nitrogen: {fileID: 100002, guid: 508552529106d294689b4aafe24b5fd6, type: 2}
+  - h2: {fileID: 100004, guid: 6efdded55b6e14b46b99bed1b43a70aa, type: 2}
+  - h22: {fileID: 100008, guid: 4adc70792506bfb41b962cb3fe89dd2f, type: 2}
+  - o2: {fileID: 100004, guid: 41c260c4eb455e1459b32226306f6b41, type: 2}
+  - h2o: {fileID: 100002, guid: 3afe35a41d8208d45ad31163fe51d461, type: 2}
+  - n2: {fileID: 100000, guid: 4e0dd7559aa982c4bb937517b5b4a049, type: 2}
+  - h23: {fileID: 100012, guid: c5aa123b0e227874a8d95571218e83e8, type: 2}
+  - nh3: {fileID: 100004, guid: b799f79aef6462743b0d680dfcab2130, type: 2}
+  - water: {instanceID: 0}
+  - water2: {instanceID: 0}
+  - water3: {instanceID: 0}
+  - water4: {instanceID: 0}
+  - water5: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 

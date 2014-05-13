@@ -1,0 +1,195 @@
+﻿#pragma strict
+
+var oxygen: GameObject;
+var hydrogen: GameObject;
+var nitrogen: GameObject;
+var probO: float;
+var probH: float;
+var probN: float;
+var time: float = 2;
+var startTime: float = 0;
+var startNumberOfParticles: int=2;
+var numberOfParticles: int=0;
+var maxNumberOfParticles: int=7;
+private var probabilities : Hashtable = new Hashtable();
+private static var pid: int=0;
+private var e : Elements;
+
+function Start(){
+	//////////////
+	
+	Debug.Log(Application.persistentDataPath);
+	Debug.Log(Application.dataPath);
+	Debug.Log(Application.streamingAssetsPath);
+//	var line : String;
+//	var fileName : String  = Application.persistentDataPath + "/test.txt";
+//	var fileWriter = File.OpenText(fileName);
+//	line = fileWriter.ReadLine();
+//	while(line !== null){
+//		Debug.Log(line);
+//		line = fileWriter.ReadLine();
+//	}
+//	//line = fileWriter.ReadToEnd();	
+//	fileWriter.Close();	
+
+	// print the path to the streaming assets folder
+	var filePath = Path.Combine(Application.streamingAssetsPath, "LevelSettings");
+	var result = "";
+	if (filePath.Contains("://")){
+		var www = new WWW (filePath);
+		yield www;
+		result = www.text;
+	} else {
+		result = File.ReadAllText(filePath);
+	}
+	Debug.Log(result);
+	
+	var lines : String[] = result.Split('\n'[0]);
+	
+	print(lines.length);
+	
+	var i: int = 0;
+	var levelFound = false;
+	var levelEnd = false;
+	while(!levelFound && i<lines.length){
+	print(lines[i]);
+		if(lines[i].StartsWith("#LEVEL "+PlayerPrefs.GetString('level'))){
+		print("LEVEL FOUND");
+			levelFound = true;
+		}
+		i++;
+	}
+    if(i>=lines.length){
+        print("LEVEL NOT FOUND");
+    }
+	while(!levelEnd && i<lines.length){
+		if(lines[i].StartsWith("#ELEMENTS")){
+			i++;
+			while(!lines[i].StartsWith("#ENDELEMENTS")){
+				if(lines[i].StartsWith("#ELM")){
+					print(lines[i]);
+					var el : String[] = lines[i].Split();
+					//print(el[0]+" -- "+el[1]+" -- "+el[2]);
+					//el[0] contiene #ELM, el[1] contienen el nombre del elemento, y el[2] contiene la probabilidad (o deberia)
+					//Acciones a realizar:
+					//decirle al spawner que utilice el elemento con probabilidad p
+                    probabilities[el[1]] = float.Parse(el[2]);
+                    //IDEA:
+                    //probabilities : Hashtable;
+                    //por cada ELM probabilities[el[1]] = el[2];
+                    //Para que el spawner funcione, crear un script Elements.js con una unica variable global, elements, que será una hashtable
+                    //cada posicion de la tabla llevara el nombre del elemento que representa y el valor de esa posicion sera el prefab.
+                    
+				}
+                i++;
+			}
+		} else if(lines[i].StartsWith("#ENDLEVEL")){
+            levelEnd = true;
+		}
+        i++;
+	}
+
+	var totprob : float = 0;
+	var thisprob : float;
+	var probclone = probabilities.Clone();
+	for (var entry : DictionaryEntry in probclone){
+	//print(entry.Key+':  '+entry.Value);
+		thisprob = entry.Value;
+		probabilities[entry.Key] = totprob + thisprob;
+		totprob += thisprob;
+		//print(totprob);
+	}
+	probclone = probabilities.Clone();
+	for (var entry : DictionaryEntry in probclone){
+		thisprob = entry.Value;
+		probabilities[entry.Key] = thisprob/totprob;
+		//print(probabilities[entry.Key]);
+	}
+	
+	//////////////
+//	var tot : float = probO+probH+probN;
+//	probO = probO/tot;
+//	probH = probH/tot + probO;
+//	probN = probN/tot + probH; //=1
+//	
+//	Debug.Log(probO);
+//	Debug.Log(probH);
+//	Debug.Log(probN);
+	
+//	for(i=0;i<startNumberOfParticles;i++){
+//	print("populating scene");
+//		randomInstance();
+//		numberOfParticles++;
+//	}
+
+	i=0;
+	e = this.GetComponent(Elements);
+
+	while(i<startNumberOfParticles){
+		if(e.loaded){
+		randomInstance();
+		numberOfParticles++;
+		} else {
+			yield WaitForSeconds(0.2);
+		}
+	}
+
+
+
+}
+
+function Update () {
+	startTime += Time.deltaTime;
+	if(startTime>time && numberOfParticles<maxNumberOfParticles){
+		randomInstance();
+		startTime=0;
+		numberOfParticles++;
+	}
+}
+	//////////////
+//	var maxel, maxprob=0;
+//	var prob = Random();
+//	for (e in probabilities){
+//		if(probabilidad de e < = prob && probabilidad de e > maxProb){
+//			maxel = elements[e1[1]];
+//			maxprob = e[2]
+//		}
+//	}
+function randomInstance(){
+	while(!e.loaded){}
+	var r = Random.Range(0.0,1.0);
+	var instance : GameObject;
+	//Debug.Log(r);
+	////////////
+	
+	var maxEl : GameObject;
+	var maxprob : float = 1;
+	var thisprob : float;
+	for (var entry : DictionaryEntry in probabilities){
+		thisprob = entry.Value;
+		print('r: '+r+'; prob: '+entry.Value+'; result: '+ (thisprob >=r) + ' && ' + (thisprob <= maxprob));
+		if(thisprob >=r && thisprob <= maxprob){
+			print(e.elements.Contains(entry.Key));
+			maxEl = e.elements[entry.Key];
+			maxprob = thisprob;
+		}
+	}
+	instance = Instantiate(maxEl,new Vector3(Random.Range(-8.0,8.0),Random.Range(-4.0,4.0),Random.Range(-6.0,6.0)),Quaternion.identity);
+
+	
+	/////////////
+//	if(r <= probO){
+//		instance = Instantiate(oxygen,new Vector3(Random.Range(-8.0,8.0),Random.Range(-4.0,4.0),Random.Range(-6.0,6.0)),Quaternion.identity);
+//	} else if (r <= probH){
+//		instance = Instantiate(hydrogen,new Vector3(Random.Range(-8.0,8.0),Random.Range(-4.0,4.0),Random.Range(-6.0,6.0)),Quaternion.identity);
+//	} else {
+//		instance = Instantiate(nitrogen,new Vector3(Random.Range(-8.0,8.0),Random.Range(-4.0,4.0),Random.Range(-6.0,6.0)),Quaternion.identity);
+//	}
+	instance.AddComponent('destroy');
+	var particleID : pid = instance.gameObject.GetComponent("pid");
+	particleID.pid = pid++;
+	var moveComp: move2 = instance.gameObject.GetComponent("move2");
+	var ps : Transform = instance.transform.GetChild(0);
+	moveComp.timeToLive = ps.GetComponent(ParticleSystem).duration + 1;
+	moveComp.cam = this.gameObject;
+}

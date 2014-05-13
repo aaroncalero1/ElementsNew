@@ -1,0 +1,47 @@
+##Configuracion de niveles
+## tags: LEVEL, ENDLEVEL, ELEMENTS(ELEMENTLIST), ENDELEMENTS, ELEMENT(ELM), PROBABILITIES(PROBLIST), ENDPROBABITITIES, PROBABILITY(PROB, PRB), SKYBOX, 
+
+#LEVEL water
+
+#ELEMENTS
+
+#ELM hydrogen 10
+#ELM oxygen 8
+#ELM nitrogen 1
+
+#ENDELEMENTS
+
+#SKYBOX water4
+
+#ENDLEVEL
+
+#LEVEL ammonia
+
+#ELEMENTS
+
+#ELM hydrogen 10
+#ELM oxygen 0
+#ELM nitrogen 10
+
+#ENDELEMENTS
+
+#SKYBOX water3
+
+#ENDLEVEL
+
+##LEVEL fission
+
+##ELEMENTS
+
+##ELM hydrogen 10
+##ELM oxygen 8
+##ELM nitrogen 1
+
+##ENDELEMENTS
+
+##SKYBOX water4
+
+##ENDLEVEL
+
+
+##PARA CAMBIAR SKYBOX::: http://answers.unity3d.com/questions/551826/any-way-to-change-skybox-after-do-something.html
